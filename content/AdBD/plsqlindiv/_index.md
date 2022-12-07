@@ -1,7 +1,7 @@
 ---
 title: "Práctica PL/SQL individual"
 date: 2022-12-07T13:37:02+01:00
-draft: true
+draft: false
 ---
 
 #### 1. Hacer un procedimiento que muestre el nombre y el salario del empleado cuyo código es 7782

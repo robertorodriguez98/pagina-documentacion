@@ -5,8 +5,8 @@ weight = 5
 chapter = true
 +++
 
-### Chapter X
+# Administración de Sistemas Gestores de Bases de Datos
 
-# Some Chapter title
+#### Roberto Rodríguez Márquez 2º ASIR
 
-Lorem Ipsum.
+[Práctica 2](practica2/)
