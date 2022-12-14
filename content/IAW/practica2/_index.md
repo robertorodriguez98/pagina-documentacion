@@ -236,3 +236,4 @@ Una vez finalizada la instalación, ya podremos utilizar nextcloud:
 
 ![p2-7](https://i.imgur.com/LKyMGco.png)
 
+{{% children description="true" %}}
