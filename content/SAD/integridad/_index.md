@@ -37,6 +37,12 @@ Significa que la firma es correcta, pero que no hay indicios de que la firma per
 * Tu clave pública debe estar en un servidor de claves
 * Escribe tu fingerprint en un papel y dárselo a tu compañero, para que puede descargarse tu clave pública.
 * Te debes bajar al menos tres claves públicas de compañeros. Firma estas claves.
+
+```bash
+gpg --sign-key 4C6D5995F2B13373
+
+```
+
 * Tu te debes asegurar que tu clave pública es firmada por al menos tres compañeros de la clase.
 * Una vez que firmes una clave se la tendrás que devolver a su dueño, para que otra persona se la firme.
 * Cuando tengas las tres firmas sube la clave al servidor de claves y rellena tus datos en la tabla Claves públicas PGP 2020-2021
