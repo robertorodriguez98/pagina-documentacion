@@ -9,8 +9,8 @@ images:
 geekdocToC: 3
 geekdocTagsToMenu: true
 
-geekdocRepo: https://github.com/robertorodriguez98
-geekdocEditPath: edit/main/pagina-documentacion
+geekdocRepo: https://github.com/robertorodriguez98/pagina-documentacion
+geekdocEditPath: edit/main
 
 geekdocSearch: true
 geekdocSearchShowParent: true
