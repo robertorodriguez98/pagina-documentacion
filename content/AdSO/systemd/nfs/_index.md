@@ -1,12 +1,12 @@
 ---
 title: "Montaje NFS mediante systemd"
 date: 2022-12-15T13:24:40+01:00
-draft: true
+draft: false
 ---
 
-{{% notice note %}}
+
 En una instancia del cloud, basada en la distribución de tu elección, anexa un volumen de 2GB. En dicha instancia deberás configurar el servicio nfs de exportación y en el volumen un punto de montaje de la exportación mediante systemd.
-{{% /notice %}}
+
 
 ### Escenario
 
@@ -43,9 +43,8 @@ systemctl enable mnt-carpeta.mount
 systemctl start mnt-carpeta.mount
 ```
 
-{{% notice tip %}}
+
 Si no funciona el montaje de la unidad, podemos comprobar os errores con `journalctl -xe`
-{{% /notice %}}
 
 Tras el montaje podemos comprobar que el disco se ha montado correctamente:
 
@@ -112,3 +111,4 @@ Podemos comprobar que el disco se ha montado correctamente:
 Comprobamos que el dispositivo de bloques se está compartiendo por nfs:
 
 ![Comprobación](https://i.imgur.com/16NCruU.png)
+

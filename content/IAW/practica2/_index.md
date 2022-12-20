@@ -235,5 +235,3 @@ Tras este paso, podemos acceder a `cloud.roberto.org` para iniciar la instalaci√
 Una vez finalizada la instalaci√≥n, ya podremos utilizar nextcloud:
 
 ![p2-7](https://i.imgur.com/LKyMGco.png)
-
-{{% children description="true" %}}
