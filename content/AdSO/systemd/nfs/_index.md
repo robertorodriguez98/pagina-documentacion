@@ -4,8 +4,14 @@ date: 2022-12-15T13:24:40+01:00
 draft: false
 ---
 
+{{< hint type=note title="Tabla de contenido" >}}
+{{< toc format=html >}}
+{{< /hint >}}
 
+{{< hint type=tip title=Enunciado >}}
 En una instancia del cloud, basada en la distribución de tu elección, anexa un volumen de 2GB. En dicha instancia deberás configurar el servicio nfs de exportación y en el volumen un punto de montaje de la exportación mediante systemd.
+{{< /hint >}}
+
 
 
 ### Escenario

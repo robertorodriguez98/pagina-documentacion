@@ -5,25 +5,28 @@ date: 2022-12-19T00:51:41+01:00
 draft: false
 ---
 
+{{< hint type=note title="Tabla de contenido" >}}
+{{< toc format=html >}}
+{{< /hint >}}
+
 El enunciado a resolver y que contiene una tabla mutante es el siguiente:
 
+{{< hint type=tip title=Enunciado >}}
 6 - Realiza los módulos de programación necesarios para evitar que un catador puntue más de tres aspectos de una misma versión de un experimento.
-
+{{< /hint >}}
 
 En este caso, el trigger principal sería sobre la tabla puntuaciones, y dentro, para comprobar que se cumple la condición de que un catador no puntúa más de 3 aspectos, se tendría que hacer una consulta a la misma tabla puntuaciones, que en ese caso estaría mutando. Para resolver el problema vamos a realizar los siguientes pasos:
 
 1. Leer bien los requisitos del problema e identificar la
 información de la tabla que debo guardar en variables
 persistentes.
-1. Crear el paquete declarando los tipos de datos y las variables
+2. Crear el paquete declarando los tipos de datos y las variables
 necesarias para guardar dicha información.
-1. Hacer un trigger before por sentencia que rellene dichas
+3. Hacer un trigger before por sentencia que rellene dichas
 variables consultando la tabla mutante.
-1. Hacer un trigger before por fila que compruebe si el registro
+4. Hacer un trigger before por fila que compruebe si el registro
 que se está manejando cumple la condición especificada
 consultando las variables persistentes.
-1. En muchas ocasiones, el trigger por fila también tendrá que ir
-actualizando la información que está en las variables
 
 ### 1. Leer bien los requisitos del problema e identificar la información de la tabla que debo guardar en variables persistentes
 
@@ -64,12 +67,17 @@ END ControlPuntuaciones;
 ```sql
 CREATE OR REPLACE TRIGGER RELLENARPUNTUACIONES
 BEFORE INSERT OR UPDATE ON Puntuaciones
+FOR EACH ROW
 DECLARE
 CURSOR c_puntuaciones IS SELECT NIFCatador,CodigoAspecto,CodigoExperimento,CodigoVersion
 FROM Puntuaciones;
 INDICE NUMBER:=0;
+indice_u number;
 BEGIN
--- relleno la tabla de sueldos de los jefes de cada departamento
+
+-- vacio el contenido de la tabla
+ControlPuntuaciones.PuntuacionesCatador.DELETE;
+-- relleno la tabla de puntuaciones los datos que me interesan
 FOR v_puntuacion IN c_puntuaciones LOOP
 ControlPuntuaciones.PuntuacionesCatador(INDICE).NIFCatador := v_puntuacion.NIFCatador;
 ControlPuntuaciones.PuntuacionesCatador(INDICE).CodigoAspecto := v_puntuacion.CodigoAspecto;
@@ -77,6 +85,14 @@ ControlPuntuaciones.PuntuacionesCatador(INDICE).CodigoExperimento := v_puntuacio
 ControlPuntuaciones.PuntuacionesCatador(INDICE).CodigoVersion := v_puntuacion.CodigoVersion;
 INDICE := INDICE + 1;
 END LOOP;
+if inserting then
+indice_u := ControlPuntuaciones.PuntuacionesCatador.LAST + 1;
+ControlPuntuaciones.PuntuacionesCatador(indice_u).NIFCatador := :NEW.NIFCatador;
+ControlPuntuaciones.PuntuacionesCatador(indice_u).CodigoAspecto := :NEW.CodigoAspecto;
+ControlPuntuaciones.PuntuacionesCatador(indice_u).CodigoExperimento := :NEW.CodigoExperimento;
+ControlPuntuaciones.PuntuacionesCatador(indice_u).CodigoVersion := :NEW.CodigoVersion;
+end if;
+
 END RELLENARPUNTUACIONES;
 /
 ```
@@ -91,7 +107,7 @@ DECLARE
 BEGIN
 -- compruebo que el catador no haya puntuado más de 3 aspectos
 IF (NumeroPuntuacionesCatador(:NEW.NIFCatador,:NEW.CodigoExperimento,:NEW.CodigoVersion) > 3) THEN
-RAISE_APPLICATION_ERROR(-20001,'El catador no puede puntuar más de 3 aspectos');
+RAISE_APPLICATION_ERROR(-20001,'El catador no puede puntuar mas de 3 aspectos');
 end if;
 END;
 /
@@ -104,7 +120,7 @@ CREATE OR REPLACE FUNCTION NumeroPuntuacionesCatador
 ( p_NIFCatador Puntuaciones.NIFCatador%TYPE, p_CodigoExperimento Puntuaciones.CodigoExperimento%TYPE, p_CodigoVersion Puntuaciones.CodigoVersion%TYPE)
 RETURN NUMBER
 IS
-    v_NumeroPuntuaciones NUMBER:= 0;
+    v_NumeroPuntuaciones NUMBER:= 1;
     v_cantidad NUMBER;
 BEGIN
     for i in ControlPuntuaciones.PuntuacionesCatador.FIRST..ControlPuntuaciones.PuntuacionesCatador.LAST
@@ -147,11 +163,13 @@ end;
 /
 ```
 
-### 5. En muchas ocasiones, el trigger por fila también tendrá que ir actualizando la información que está en las variables
+
 
 ```sql
 insert into puntuaciones values('14425879A','0004','A0003-A','0.0.2',7.5);
 insert into puntuaciones values('14425879A','0005','A0003-A','0.0.2',7.5);
 insert into puntuaciones values('14425879A','0006','A0003-A','0.0.2',7.5);
 insert into puntuaciones values('14425879A','0007','A0003-A','0.0.2',7.5);
+select * from puntuaciones where nifcatador='14425879A' and codigoexperimento='A0003-A' and codigoversion='0.0.2';
+insert into puntuaciones values('14425879A','0005','A0003-A','0.0.1',7.5);
 ```
